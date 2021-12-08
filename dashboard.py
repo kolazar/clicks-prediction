@@ -31,6 +31,8 @@ import sklearn
 # Config and setup
 st.set_page_config(layout="wide", page_title="Blue Jeans Dashboard")
 
+st.header("Blue Jeans Dashboard")
+
 # Reading the dataset
 clicks = pd.read_csv('clicks.csv', sep=";")
 
@@ -61,7 +63,7 @@ st.write("##### Explanation of the dataset\n"
 price = st.slider('Price (US dollars)', 1, 100, 50)
 colour = st.slider('Colour id', 1, 14, 1)
 location = st.slider('Location id', 1, 6, 1)
-model_photography = st.slider('Photo type id', 1, 2, 1)
+model_photography = st.selectbox('Photo type id', (1, 2))
 page1 = st.slider('Product category', 1, 4, 1)
 
 
