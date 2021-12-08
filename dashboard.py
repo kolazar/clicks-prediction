@@ -63,8 +63,8 @@ st.write("##### Explanation of the dataset\n"
 price = st.slider('Price (US dollars)', 1, 100, 50)
 colour = st.slider('Colour id', 1, 14, 1)
 location = st.slider('Location id', 1, 6, 1)
-model_photography = st.selectbox('Photo type id', (1, 2))
 page1 = st.slider('Product category', 1, 4, 1)
+model_photography = st.selectbox('Photo type id', (1, 2))
 
 
 # colour = st.selectbox('Colour id', ('beige', 'black', 'blue', 'brown', 'burgundy','gray','green','navy blue' ,'of many colors','olive', 'pink', 'red','violet', 'white') , index=1)
