@@ -29,23 +29,24 @@ from PIL import Image
 import sklearn
 
 # Config and setup
-st.set_page_config(layout="wide", page_title="Blue Jeans Dashboard")
+st.set_page_config(page_title="Blue Jeans Dashboard")
 
 st.header("Blue Jeans Dashboard")
 
 # Reading the dataset
 clicks = pd.read_csv('clicks.csv', sep=";")
 
-st.header("Data Exploration")
+st.write("#### Data Exploration")
+
 
 image1 = Image.open('graph3.PNG')
 image2 = Image.open('graph4.PNG')
-st.write("#### Amount of clothing type sold on a specific day")
-st.image(image1)
-st.write("#### Average price of items grouped by colours")
-st.image(image2)
+st.write("##### Amount of clothing type sold on a specific day")
+st.image(image1, width=900)
+st.write("##### Average price of items grouped by colours")
+st.image(image2, width=900)
 
-st.header("Clicks Prediction")
+st.write("### Clicks Prediction")
 st.write("#### Configure filters and press the button to get the predicted order of clicks")
 
 st.write("##### Explanation of the dataset\n"
@@ -61,38 +62,31 @@ st.write("##### Explanation of the dataset\n"
 
 # Setting up filters
 price = st.slider('Price (US dollars)', 1, 100, 50)
-colour = st.slider('Colour id', 1, 14, 1)
-location = st.slider('Location id', 1, 6, 1)
-page1 = st.slider('Product category', 1, 4, 1)
+colour = st.selectbox('Colour id', (range(1, 15)))
+location = st.selectbox('Location id', (range(1, 7)))
+page1 = st.selectbox('Product category', (range(1, 5)))
 model_photography = st.selectbox('Photo type id', (1, 2))
-
-
-# colour = st.selectbox('Colour id', ('beige', 'black', 'blue', 'brown', 'burgundy','gray','green','navy blue' ,'of many colors','olive', 'pink', 'red','violet', 'white') , index=1)
-# location = st.selectbox('Location of an item ', ('top left', 'top in the middle', 'top right','bottom left', 'bottom in the middle', 'bottom right'))
-# model_photography = st.selectbox('Photo type',('en face ','profile'))
-# page1 = st.selectbox('Product category', ('trousers ','skirts ','blouses ','sale'))
 
 
 # Accepting the user input
 def user_input_features(price, colour, location, model_photography, page1):
     data = {
-        'price': price, 'colour': colour, 'location': location,'page1': page1, 'model photography': model_photography,
-        }
+        'price': price, 'colour': colour, 'location': location, 'page1': page1, 'model photography': model_photography,
+    }
     features = pd.DataFrame(data, index=[0])
     return features
 
 
 input_df = user_input_features(price, colour, location, model_photography, page1)
 
-
 # Combines user input features with entire routes dataset
 clicks = clicks.drop(
-    columns=['order', 'year', 'month', 'day', 'country', 'session ID', 'page 2 (clothing model)', 'price 2', 'page','page 1 (main category)'])
+    columns=['order', 'year', 'month', 'day', 'country', 'session ID', 'page 2 (clothing model)', 'price 2', 'page',
+             'page 1 (main category)'])
 
 df = pd.concat([input_df, clicks], axis=0)
 
 df = df[:1]  # Selects only the first row (the user input data)"
-
 
 if st.button('Predict'):
     # form.empty()
