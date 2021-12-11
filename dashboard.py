@@ -23,12 +23,17 @@ PRICE 2 -> variable informing whether the price of a particular product is highe
 """
 
 import pickle
+
+import seaborn as sns
+import matplotlib.pyplot as plt
 import streamlit as st
 import pandas as pd
 from PIL import Image
-import sklearn
+import plotly.express as px
 
 # Config and setup
+from sklearn import preprocessing
+
 st.set_page_config(page_title="Blue Jeans Dashboard")
 
 st.header("Blue Jeans Dashboard")
@@ -38,6 +43,32 @@ clicks = pd.read_csv('clicks.csv', sep=";")
 
 st.write("#### Data Exploration")
 
+clicks['price-bin'] = pd.cut(clicks['price'], [0,20,40,60,80])
+
+
+st.write("##### Most popular colors by price")
+fig = plt.figure(figsize=(60,30))
+sns.countplot(x='price-bin', hue = 'colour', data = clicks)
+st.pyplot(fig)
+st.write("##### Appearance of an item in a specific order")
+dff = clicks.groupby(["page 1 (main category)","month"]).order.count().reset_index()
+dff["page 1 (main category)"] = dff['page 1 (main category)'].replace({'1':'trousers','2':'skirts','3':'blouses','4':'sale'})
+fig1 = px.line(dff, x="month", y="order", color = "page 1 (main category)")
+st.plotly_chart(fig1)
+
+
+
+dfff = clicks.groupby(["country"]).order.count().reset_index()
+
+x = dfff.values #returns a numpy array
+min_max_scaler = preprocessing.MinMaxScaler()
+x_scaled = min_max_scaler.fit_transform(x)
+dfff1 = pd.DataFrame(x_scaled)
+dfff1.info()
+dfff1.columns = ['a', 'b']
+dfff['normalizedorder'] = dfff1['b']
+fig2 = px.bar(dfff, x='country', y='normalizedorder')
+st.plotly_chart(fig2)
 
 image1 = Image.open('graph3.PNG')
 image2 = Image.open('graph4.PNG')
@@ -49,7 +80,7 @@ st.image(image2, width=900)
 st.write("### Clicks Prediction")
 st.write("#### Configure filters and press the button to get the predicted order of clicks")
 
-st.write("##### Explanation of the dataset\n"
+st.write("##### Explanation of the fields\n"
          "* PAGE 1 (MAIN CATEGORY) -> concerns the main product category: 1-trousers "
          "2-skirts 3-blouses 4-sale \n"
 
