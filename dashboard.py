@@ -98,7 +98,6 @@ location = st.selectbox('Location id', (range(1, 7)))
 page1 = st.selectbox('Product category', (range(1, 5)))
 model_photography = st.selectbox('Photo type id', (1, 2))
 
-
 # Accepting the user input
 def user_input_features(price, colour, location, model_photography, page1):
     data = {
@@ -110,10 +109,11 @@ def user_input_features(price, colour, location, model_photography, page1):
 
 input_df = user_input_features(price, colour, location, model_photography, page1)
 
+
 # Combines user input features with entire routes dataset
 clicks = clicks.drop(
     columns=['order', 'year', 'month', 'day', 'country', 'session ID', 'page 2 (clothing model)', 'price 2', 'page',
-             'page 1 (main category)'])
+             'page 1 (main category)', 'price-bin'])
 
 df = pd.concat([input_df, clicks], axis=0)
 
